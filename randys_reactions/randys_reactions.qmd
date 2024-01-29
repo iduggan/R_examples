@@ -1,0 +1,24 @@
+---
+title: "Randy's Reactions"
+format: 
+  html:
+    toc: true
+editor: source
+---
+
+## Chart Practice Homework, Jan 29, 2024
+
+Bella!  Nice work!  I really really appreciated the notes and effort you put into not only learning how to do some new things, but that you also reflected on that as well.  
+
+Some things to consider for next time:
+
+* with colors, I typically hit up google with this search: 'hex code picker' then enter the hex code, instead of the RGB values.  Note-you will need to copy the entire hex code including the #.  That said, I mostly make charts in ggplot.  
+* In your Quarto doc I played around with the opacity.  That said, like you I did not figure out the color and opacity at the same time-a little challenge for us!  It might be easier in ggplot.
+* Nice work trying to resolve your issues-I really appreciate that.  I think you will get better at this as you learn to refine your questions.
+* With the subtitle, I found that base R seems to always (?-not sure on that) put the subtitle below the chart.  I wonder if there is another approach, such as forcing a 'hard return' in the title parameter.  Also see https://stackoverflow.com/questions/55002046/adjust-plot-title-and-sub-title-in-base-r
+
+
+
+
+
+
