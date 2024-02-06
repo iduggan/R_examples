@@ -1,0 +1,79 @@
+---
+title: "Base R Chart"
+author: "Isabella Duggan"
+format:
+  html: 
+    toc: true
+editor: source
+---
+
+## Notes from creating chart
+
+1. I was getting an error running the code from the R gallery website originally 
+  * Using wrong code from website
+  * learned which code from the gallery to use
+2. I wanted to change the color of the bars
+  * Through trial and error/ working with RGB got it to a color I like
+  * Not entirely sure this is how color should be inputted - RGB was 47, 135, 235; but original inputs were decimals. I couldn't figure out how to change these to decimals/ wasn't sure how I'm meant to do that
+  * asked chatgpt and it gave me the code: rgb(47, 135, 235, maxColorValue = 255)
+    -   After this wasn't sure how to add opacity back in
+3. Wanted to use my own data/ recreate a chart I've created in excel in the past
+  * Originally was a five row chart but I only needed three - letters: 1:5 to 1:3 and value: ,5 to ,3
+  * One issue I ran into was figuring out how to move my subtitle where I wanted it - *sub code places text at the bottom of the graph, while I wanted it just below the main title*
+  * Once I recreated the chart, I also wanted to add some horizontal lines in the background to make the visual more structured - I used R gallery, google, and chatgpt (again) to work through this
+    - *Though some graphs on R gallery have horizontal lines, I couldn't figure out how to make the code run*
+    - I couldn't figure out how to do this - *I tried to work through this for a while and even chatgpt stopped giving me answers, saying: Something went wrong. If this issue persists please contact us through our help center at help.openai.com.*
+    - I would like to learn how to resolve this in the future!
+  
+
+## Make Bar Graph in base R
+
+From https://r-graph-gallery.com/208-basic-barplot.html
+
+```{r}
+# create data
+data <- data.frame(
+  name<- c("Low Dose", "High Dose", "Control")[1:3],
+  value= c(67, 61, 73),3)
+
+# Overall Percent Regrowth Bar Graph
+barplot(height=data$value, names=data$name, border="#69b3a2", col=rgb(47, 135, 235, maxColorValue = 255), 
+        ylab= "% Growth", main= "Overall Percent Regrowth: All Trials", sub= expression(italic("Dugesia Tigrina")),cex.lab = 1, cex.main = 2, cex.sub = 1.5, 
+        ylim=c(0,80))
+
+abline(
+  h = seq(0, max(data$value), by = 20),                 
+  col = "gray",                                        
+  lty = 2                                              
+)
+```
+
+##Chart Practice 2 (2/2):
+
+From https://r-graph-gallery.com/218-basic-barplots-with-ggplot2.html
+
+```{r}
+# Load ggplot2
+library(ggplot2)
+
+data <- data.frame(
+  name = c("Low Dose", "High Dose", "Control"),  
+  value = c(67, 61, 73)
+)
+
+# Barplot
+ggplot(data, aes(x = name, y = value, fill = name)) +
+  geom_bar(stat = "identity") +
+  scale_fill_manual(values = c("red", "green", "blue")) +
+  
+  # Add a title
+  labs(title = "Overall Percent Regrowth: All Trials",
+       
+       # Modify axis labels
+       x = "Dugesia Tigrina",
+       y = "Percent (%) Regrowth",
+       
+       # Modify legend title
+       fill = "")
+
+```
