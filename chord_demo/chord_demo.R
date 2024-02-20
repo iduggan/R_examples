@@ -26,6 +26,13 @@ chord_df <- read_csv("chord_demo/bps2evt_chord.csv")
 matrix_df <- as.matrix(as_adjacency_matrix(as_tbl_graph(chord_df),
                                            attr = "ACRES"))
 
+library(htmlwidgets)
+library(chorddiag)
+library(htmlwidgets)
+library(igraph)
+library(readr)
+library(tidygraph)
+library(tidyverse)
 #clean up matrix to remove empty rows.  Specifics will change depending on inputs.
 matrix_df <- matrix_df[-c(8:16), -c(1:7)]
 

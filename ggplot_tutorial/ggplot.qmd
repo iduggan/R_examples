@@ -1,0 +1,57 @@
+---
+title: "ggplot_tutorial"
+format: html
+editor: source
+---
+
+#Load {readr} package + create dataset "chic"
+library(readr)
+
+chic <- readr::read_csv("https://cedricscherer.com/data/chicago-nmmaps-custom.csv")
+
+#Create set of 10 from entire dataset
+head(chic,10)
+  # A tibble: 10 × 10
+   city  date        temp    o3 dewpoint  pm10 season  yday month  year
+   <chr> <date>     <dbl> <dbl>    <dbl> <dbl> <chr>  <dbl> <chr> <dbl>
+ 1 chic  1997-01-01  36    5.66    37.5  13.1  Winter     1 Jan    1997
+ 2 chic  1997-01-02  45    5.53    47.2  41.9  Winter     2 Jan    1997
+ 3 chic  1997-01-03  40    6.29    38    27.0  Winter     3 Jan    1997
+ 4 chic  1997-01-04  51.5  7.54    45.5  25.1  Winter     4 Jan    1997
+ 5 chic  1997-01-05  27   20.8     11.2  15.3  Winter     5 Jan    1997
+ 6 chic  1997-01-06  17   14.9      5.75  9.36 Winter     6 Jan    1997
+ 7 chic  1997-01-07  16   11.9      7    20.2  Winter     7 Jan    1997
+ 8 chic  1997-01-08  19    8.68    17.8  33.1  Winter     8 Jan    1997
+ 9 chic  1997-01-09  26   13.4     24    12.1  Winter     9 Jan    1997
+10 chic  1997-01-10  16   10.4      5.38 24.8  Winter    10 Jan    1997
+
+#Load ggplot2
+library(ggplot2)
+
+(g <- ggplot(chic, aes(x = date, y = temp)))
+
+g + geom_point()
+
+g + geom_line()
+
+g + geom_line() + geom_point()
+
+# Change properties of geom
+
+g + geom_point(color = "firebrick", shape = "diamond", size = 2)
+
+g + geom_point(color = "firebrick", shape = "diamond", size = 2) +
+    geom_line(color = "firebrick", linetype = "dotted", lwd = .3)
+
+#Replacing theme (default grey)
+1. use "theme_set()" / "theme_bw()"
+
+theme_set(theme_bw())
+
+g + geom_point(color = "firebrick")
+
+2. theme() is an essential command to manually modify all kinds of theme elements (texts, rectangles, and lines
+
+## Working with Axes
+
+### to

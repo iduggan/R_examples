@@ -20,6 +20,7 @@ data_long <- pivot_longer(data,
                           names_to = 'past_present',
                           values_to = 'acres')
 
+library(ggplot2)
 
 # create initial grouped bar chart
 ggplot(data_long, aes(x = type, y = acres, fill = past_present)) +
