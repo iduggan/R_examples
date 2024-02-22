@@ -1,6 +1,8 @@
 ---
 title: "ggplot_tutorial"
-format: html
+format: 
+  html:
+    toc: true
 editor: source
 ---
 
