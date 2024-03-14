@@ -30,7 +30,26 @@ Over the course it is expected you will:
 ## Personal objectives
 
 -   All writing in quarto
+    -   <div>
+
+        > Reflection 1: I began all of my writing in quarto, and have made progress creating a project file where I can store and share my research. However, I was struggling to figure out how to export the quarto file into a word document, so I have been going in between docs and R with my notes. Not the most efficient, I'd like to figure out how to fix this problem; but also feel like I prefer notes, data, and storing in R rather than the writing itself- so maybe we can revise this goal!
+
+        </div>
 -   Explore diagrams and flowcharts in R
-    * https://epirhandbook.com/en/diagrams-and-charts.html
-    * https://mikeyharper.uk/flowcharts-in-r-using-diagrammer/
+    -   https://epirhandbook.com/en/diagrams-and-charts.html
+    -   https://mikeyharper.uk/flowcharts-in-r-using-diagrammer/
+        -   <div>
+
+            > Reflection 1: I haven't made as much progress with my charts and diagrams. I now have data from my professor to work with and really get comfortable creating different charts with. For our next reflection, I'd like to set the goals of having a variety of different charts/ diagrams to look at and share. I think for this reflection it makes sense why I've focused on the bones/ structure of my research in general rather than charts, now that I have more there I'd like to make this my next step.
+
+            </div>
 -   Let Randy know if spatial data analysis or other things come up
+
+> Workflow progress: Research website
+>
+> I think I've made good progress in creating my first website through workflowr. Thus far I've created the site, changed the theme, added personal info, a data chart/ new index item, and a photo of myself. I'd like to work on creating a more usable site moving forward and would like for us to discuss/ outline the goals we have for me to complete with the remainder of class!
+>
+> 1.  Use data from advisor to create charts
+> 2.  Write notes as I go with any progress/ issues (?)
+>     1.  Almost use the space as a blog???
+> 3.  Anything else?
