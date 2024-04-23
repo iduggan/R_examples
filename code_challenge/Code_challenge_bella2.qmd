@@ -62,67 +62,51 @@ ggplot(filtered_pivot, aes(x=Rel_Percent, y=name)) +
 ```{r}
 colnames(scls_aoi_attributes)[colnames(scls_aoi_attributes) == "VALUE"] <- "Var2"
 
-merged_variance <- left_join(combine_raw, scls_aoi_attributes, by = "Var2")
+merged_variance <- left_join(combine_raw, scls_aoi_attributes %>% dplyr::select(2, 4), by = "Var2")
 
 colnames(bps_aoi_attributes)[colnames(bps_aoi_attributes) == "VALUE"] <- "Var1" #I think I did this because I thought it would connect merged_variance/ help in calculations but I actually don't think it will
 
 colnames(LF16_BPS_200)[colnames(LF16_BPS_200) == "VALUE"] <- "Var1" #similarly wanted to change to Var1 to possibly filter/merge with merged_variance
 
-merged_LF16_attr <- merge(bps_aoi_attributes, LF16_BPS_200, by = "Var1") 
-
-filtered_LF16 <- filter(merged_LF16_attr, BPS_MODEL.x == "13040_32_43_44_49" |  BPS_MODEL.x == "15070_44" | BPS_MODEL.x == "13670_32_44") #ended up with 3 rows 
-
-```
-
-> I am stuck. I have the past dataset but still cannot figure out present %. I was thinking of filtering LF16 by BPS_MODEL to get the values for Var1 to connect back to the frequencies after merging combine_raw and scls BUT realized the Var1 variables have different values (at least in the LF16 dataset), so that won't work. Now I don't know what to do.
-
-##Trying Randy's Code:
-```{r}
-
-combine <- left_join(combine_raw, scls_aoi_attributes %>% dplyr::select(2, 4), by = c("Var2"))
-
-#bring in bps labels
-combine <- left_join(combine, LF16_BPS_200 %>% dplyr::select(1:4), by = c("Var1"))
+mergedv2 <- left_join(merged_variance, LF16_BPS_200 %>% dplyr::select(1:5), by = "Var1")
 
 # calculate current sclass percents
-combine <- combine %>%
+combine <- mergedv2 %>%
   group_by(Var1, BPS_MODEL) %>%
   mutate(total_count = sum(Freq)) %>%
   mutate(currentPercent = as.integer((Freq/total_count)*100)) %>%
   unite(model_label, c("BPS_MODEL", "LABEL"))
 
+```
+
+##Trying to filter?
+```{r}
+
 filtered_combine <- filter(combine, BPS_CODE == "13040" | BPS_CODE == "13670" | BPS_CODE == "15070")
+
+filtered_combine$BPS_NAME <- factor(filtered_combine$BPS_NAME, levels = unique(filtered_combine$BPS_NAME))
+
+# Reorder the dataset by the BPS_NAME column
+reordered_combine <- arrange(filtered_combine, BPS_NAME)
 
 ```
 
 >merged_total <- merge(filtered_aoi, merged_variance, by = "Var1")
 
-> I had a mess of data in my environment after this, by creating the correct data through trial and error. I wish I had been more intentional in my naming because it made things more difficult leaving them with their original names, I would have to keep looking through the datasets to remember what I needed from them. 
-
-##practice charts:
-```{r}
-library(ggplot2)
-library(dplyr)
-library(tidyverse)
-
-ggplot(merged_variance, aes(x=REL_PERCENT, y=LABEL)) + 
-  geom_bar(stat = "identity")
-
-ggplot(merged_modelcode, aes(x=BPS_MODEL, y= A)) +
-  geom_bar(stat= "identity")
-
-```
+>  I wish I had been more intentional in my naming because it made things more difficult leaving them with their original names, I would have to keep looking through the datasets to remember what I needed from them. 
 
 #Put it together
 ```{r}
 library(janitor)
 
-past_and_present <- cross_join(filtered_pivot, filtered_combine) %>% 
+past_and_present <- cross_join(filtered_pivot, reordered_combine) %>% 
   drop_na("Rel_Percent") %>% 
   mutate(currentPercent = as.numeric(currentPercent), currentPercent = ifelse(is.na(currentPercent), 0, currentPercent)) %>%
           mutate(total_count = as.numeric(total_count),  total_count = ifelse(is.na(total_count), 0, total_count)) %>%
           select(-c(BPS_CODE, ZONE)) %>%
-                         select(c(Freq, Var1, Var2,
+                         select(c(Freq, 
+                                  Var1, 
+                                  Var2,
                                   BpS_Name,
                                   Model_Code,
                                   model_label,
@@ -134,7 +118,6 @@ past_and_present <- cross_join(filtered_pivot, filtered_combine) %>%
                                  scl_value = Var2,
                                  bps_name = BpS_Name) %>%
                           clean_names() 
-
 ```
 
 ## Make Chart
