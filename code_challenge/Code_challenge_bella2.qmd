@@ -1,0 +1,171 @@
+---
+title: "code_challlenge_bella"
+format: html
+editor: source
+---
+
+# Code Challenge:
+
+##1. Load Data Into Environment
+
+```{r}
+bps_aoi_attributes <- read.csv("code_challenge/input_data/bps_aoi_attributes.csv")
+
+bps_model_number_names <- read.csv("code_challenge/input_data/bps_model_number_name.csv")
+
+combine_raw <- read.csv("code_challenge/input_data/combine_raw.csv")
+
+LF16_BPS_200 <- read.csv("code_challenge/input_data/LF16_BPS_200.csv")
+
+ref_con_modified <- read.csv("code_challenge/input_data/ref_con_modified.csv")
+
+scls_aoi_attributes <- read.csv("code_challenge/input_data/scls_aoi_attributes.csv")
+
+```
+
+###Practice chart
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(tidyverse)
+
+ggplot(scls_aoi_attributes, aes(x=REL_PERCENT, y=LABEL)) + 
+  geom_bar(stat = "identity")
+```
+
+##2. Merge & Filter for past data
+```{r}
+merged_modelcode <- merge(bps_model_number_names, ref_con_modified, by = "Model_Code")
+
+merged_mc_pivot <- pivot_longer(merged_modelcode,
+                          cols = c(A:E, Agriculture:UE))
+
+filtered_pivot <- filter(merged_mc_pivot, Model_Code == "13040_32_43_44_49" |  Model_Code == "15070_44" | Model_Code == "13670_32_44")
+
+colnames(filtered_pivot)[colnames(filtered_pivot) == "value"] <- "Rel_Percent"
+
+```
+
+### Practice Chart (Past only):
+```{r}
+library(ggplot2)
+library(dplyr)
+library(tidyverse)
+
+ggplot(filtered_pivot, aes(x=Rel_Percent, y=name)) + 
+  geom_bar(stat = "identity")
+
+```
+
+#Merging for Present Data
+```{r}
+colnames(scls_aoi_attributes)[colnames(scls_aoi_attributes) == "VALUE"] <- "Var2"
+
+merged_variance <- left_join(combine_raw, scls_aoi_attributes, by = "Var2")
+
+colnames(bps_aoi_attributes)[colnames(bps_aoi_attributes) == "VALUE"] <- "Var1" #I think I did this because I thought it would connect merged_variance/ help in calculations but I actually don't think it will
+
+colnames(LF16_BPS_200)[colnames(LF16_BPS_200) == "VALUE"] <- "Var1" #similarly wanted to change to Var1 to possibly filter/merge with merged_variance
+
+merged_LF16_attr <- merge(bps_aoi_attributes, LF16_BPS_200, by = "Var1") 
+
+filtered_LF16 <- filter(merged_LF16_attr, BPS_MODEL.x == "13040_32_43_44_49" |  BPS_MODEL.x == "15070_44" | BPS_MODEL.x == "13670_32_44") #ended up with 3 rows 
+
+```
+
+> I am stuck. I have the past dataset but still cannot figure out present %. I was thinking of filtering LF16 by BPS_MODEL to get the values for Var1 to connect back to the frequencies after merging combine_raw and scls BUT realized the Var1 variables have different values (at least in the LF16 dataset), so that won't work. Now I don't know what to do.
+
+##Trying Randy's Code:
+```{r}
+
+combine <- left_join(combine_raw, scls_aoi_attributes %>% dplyr::select(2, 4), by = c("Var2"))
+
+#bring in bps labels
+combine <- left_join(combine, LF16_BPS_200 %>% dplyr::select(1:4), by = c("Var1"))
+
+# calculate current sclass percents
+combine <- combine %>%
+  group_by(Var1, BPS_MODEL) %>%
+  mutate(total_count = sum(Freq)) %>%
+  mutate(currentPercent = as.integer((Freq/total_count)*100)) %>%
+  unite(model_label, c("BPS_MODEL", "LABEL"))
+
+filtered_combine <- filter(combine, BPS_CODE == "13040" | BPS_CODE == "13670" | BPS_CODE == "15070")
+
+```
+
+>merged_total <- merge(filtered_aoi, merged_variance, by = "Var1")
+
+> I had a mess of data in my environment after this, by creating the correct data through trial and error. I wish I had been more intentional in my naming because it made things more difficult leaving them with their original names, I would have to keep looking through the datasets to remember what I needed from them. 
+
+##practice charts:
+```{r}
+library(ggplot2)
+library(dplyr)
+library(tidyverse)
+
+ggplot(merged_variance, aes(x=REL_PERCENT, y=LABEL)) + 
+  geom_bar(stat = "identity")
+
+ggplot(merged_modelcode, aes(x=BPS_MODEL, y= A)) +
+  geom_bar(stat= "identity")
+
+```
+
+#Put it together
+```{r}
+library(janitor)
+
+past_and_present <- cross_join(filtered_pivot, filtered_combine) %>% 
+  drop_na("Rel_Percent") %>% 
+  mutate(currentPercent = as.numeric(currentPercent), currentPercent = ifelse(is.na(currentPercent), 0, currentPercent)) %>%
+          mutate(total_count = as.numeric(total_count),  total_count = ifelse(is.na(total_count), 0, total_count)) %>%
+          select(-c(BPS_CODE, ZONE)) %>%
+                         select(c(Freq, Var1, Var2,
+                                  BpS_Name,
+                                  Model_Code,
+                                  model_label,
+                                  Rel_Percent,
+                                  currentPercent,
+                                  total_count)) %>%
+                          rename(count = Freq,
+                                 bps_value = Var1,
+                                 scl_value = Var2,
+                                 bps_name = BpS_Name) %>%
+                          clean_names() 
+
+```
+
+## Make Chart
+```{r}
+# Load the tidyr library
+library(tidyr)
+
+
+
+
+```
+
+
+#Reflection:
+
+ii. From this challenge my comfortability with data wrangling has improved tremendously. At the start of this challenge I was still rusty/ not completely comfortable and having to ask chatgpt questions about inputting data and merging datasets. Now I feel that if we were given a second code challenge, with the information I've learned from this first, I might be able to work through things more efficiently.
+
+iii. I think I did a good job at reflecting/ note taking as I went along and struggled. I made notes for myself so if I took a break and came back another day, or a few days later, I still knew what I had going on and needed to work with. I think if I were working with a partner on something like this that form of note taking would be helpful and make things easier for two people. Similarly, I could definitely improve on making comments within code, that's something I need to get in the habit of doing.
+
+##Annotations:
+
+> merge: merge is used to merge 2 datasets together by a specified column.
+
+>pivot_longer: apart of "tidyr," used to shift datasets from a wide to long format.
+
+>filter: used to filtered datasets by a specific attribute within a column.
+
+>colnames: used to rename columns.
+
+>left_join: used to join the left side of one dataset to all the matching attributes on the right of another dataset.
+
+>group_by: used in conjunction with "mutate()" or other functions of the "dplyr" package,enabling you to group one or more variables in a dataset and manipulate them by their group.
+
+>unite: concentrates values in R by tidying and uniting messy columns.

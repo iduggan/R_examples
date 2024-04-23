@@ -37,7 +37,7 @@ Over the course it is expected you will:
         </div>
 -   Explore diagrams and flowcharts in R
     -   https://epirhandbook.com/en/diagrams-and-charts.html
-    -   https://mikeyharper.uk/flowcharts-in-r-using-diagrammer/
+    -   https://mikeyharper.uk/flowcharts-in-r-using-diagrammer
         -   <div>
 
             > Reflection 1: I haven't made as much progress with my charts and diagrams. I now have data from my professor to work with and really get comfortable creating different charts with. For our next reflection, I'd like to set the goals of having a variety of different charts/ diagrams to look at and share. I think for this reflection it makes sense why I've focused on the bones/ structure of my research in general rather than charts, now that I have more there I'd like to make this my next step.
