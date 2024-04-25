@@ -30,7 +30,7 @@ library(tidyverse)
 filtered_pivot <- merge(bps_model_number_names, ref_con_modified, by = "Model_Code") %>%
  pivot_longer(cols = c(A:E, Agriculture:UE)) %>% 
   filter(Model_Code == "13040_32_43_44_49" |  Model_Code == "15070_44" | Model_Code == "13670_32_44") %>%
-  unite(model_label, "Model_Code", "name", sep = "", remove = FALSE) 
+  unite(model_label, "Model_Code", "name", remove = FALSE) 
 
 colnames(filtered_pivot)[colnames(filtered_pivot) == "name"] <- "refLabel"
 
@@ -74,10 +74,12 @@ filtered_combine <- arrange(filtered_combine, BPS_NAME)
 ```{r}
 library(janitor)
 
-past_and_present <- left_join(filtered_pivot, filtered_combine, by = "model_label") %>% 
+past_and_present <- left_join(filtered_pivot, filtered_combine, by = c("model_label"))%>% 
   drop_na("RefPercent") %>% 
   mutate(currentPercent = as.numeric(currentPercent), currentPercent = ifelse(is.na(currentPercent), 0, currentPercent)) %>%
+  
           mutate(total_count = as.numeric(total_count),  total_count = ifelse(is.na(total_count), 0, total_count)) %>%
+  
           select(-c(BPS_CODE, ZONE, Model_Code)) %>%
                          select(c(Freq, 
                                   Var1, 
@@ -95,8 +97,6 @@ past_and_present <- left_join(filtered_pivot, filtered_combine, by = "model_labe
                           clean_names() 
 
 ```
-
-> Okay, when we met you saw my chart was correct right? I don't know WHAT happened, but when I loaded it the next day I was no longer seeing values for bps, scl, current_percent, or total_count- which is screwing up my final graph... I did edit filtered_pivot to include refLabel because I didn't have that before and needed it; but that shouldn't mess up my Var1, Var2, etc. you wouldn't think, right? 
 
 ## Make Chart
 ```{r}
@@ -177,3 +177,4 @@ iii. I think I did a good job at reflecting/ note taking as I went along and str
 >group_by: used in conjunction with "mutate()" or other functions of the "dplyr" package,enabling you to group one or more variables in a dataset and manipulate them by their group.
 
 >unite: concentrates values in R by tidying and uniting messy columns, used to unite Model_Code and name to create model label.
+
