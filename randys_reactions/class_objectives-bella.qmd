@@ -53,3 +53,8 @@ Over the course it is expected you will:
 > 2.  Write notes as I go with any progress/ issues (?)
 >     1.  Almost use the space as a blog???
 > 3.  Anything else?
+
+##Final Reflection:
+>In the past month since we have met I have made new charts and worked on getting more comfortable wrangling data into R. As of right now I don't know where I want my website to be versus where its at. I have created charts and new dataframes from my advisors data, and I have a few more charts I'd still like to make (before making them all prettier); but beyond that I'm not sure where to go to make it feel like a complete website I can share. If you have any suggestions before things are due next week that'd be helpful!
+>I also feel like I haven't been as focused as I was expecting to be due to the coding challenge, so for unexpected increase in workload I'd say what I have done is good; but I would still like to do more.
+>I know you'd like for us to have an overarching goal throughout sharing our website, and I'm not really sure what my goal is just yet... I think once I have real data of my own and am working on my own research it will be easier to use the website/ create updates.
